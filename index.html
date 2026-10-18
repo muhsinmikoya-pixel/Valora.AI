@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f97316">
+<title>Valora — Find what's worth it</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--orange:#f97316;--ink:#111;--muted:#71717a;--bg:#f7f7f5;--card:#fff;--line:#e5e5e2}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{max-width:1100px;margin:auto;min-height:100vh}
+header{height:72px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:30px;font-weight:950;letter-spacing:-2px}.logo span{color:var(--orange)}
+.location{width:46px;height:46px;border:1px solid #ddd;background:#fff;border-radius:15px;display:grid;place-items:center}.location svg{width:23px;height:23px;fill:none;stroke:#111;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.location.ok{background:#111}.location.ok svg{stroke:#fff}
+.hero{padding:48px 18px 22px}.hero h1{font-size:clamp(43px,9vw,72px);line-height:.93;letter-spacing:-4px}.hero h1 span{color:var(--orange)}.hero p{max-width:690px;color:#777;font-size:17px;line-height:1.55;margin-top:18px}
+.search{margin-top:25px;background:#111;border-radius:21px;padding:8px;display:flex;gap:8px}.search input{flex:1;min-width:0;border:0;outline:0;background:#fff;border-radius:14px;padding:16px}.primary,.find{border:0;background:var(--orange);color:#fff;border-radius:14px;padding:0 21px;font-weight:900}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:10px 18px 26px}.cat{border:1px solid #ddd;background:#fff;border-radius:20px;padding:18px;text-align:left;transition:.2s}.cat.active{border-color:var(--orange);box-shadow:0 8px 25px #f9731615}.cat:hover{transform:translateY(-2px)}.icon{width:43px;height:43px;background:#fff0e7;color:var(--orange);border-radius:14px;display:grid;place-items:center;margin-bottom:13px}.icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.cat strong{font-size:18px}.cat small{display:block;color:#777;line-height:1.35;margin-top:5px}
+.panel{margin:0 18px 28px;background:#111;color:#fff;border-radius:23px;padding:20px}.panel h2{font-size:21px;margin-bottom:14px}.form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:9px}.field{background:#222;border:1px solid #333;border-radius:13px;padding:9px 12px}.field label{font-size:9px;color:#aaa;font-weight:900;display:block;margin-bottom:4px}.field input,.field select{background:transparent;color:#fff;border:0;outline:0;width:100%}.field option{color:#111}.find{min-height:48px}
+.results{padding:0 18px 35px}.result-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px}.result-head h2{font-size:26px}.result-head small{color:#777}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid #e2e2df;border-radius:20px;overflow:hidden}.pic{height:190px;background:#eee}.pic img{width:100%;height:100%;object-fit:cover;display:block}.body{padding:15px}.badge{display:inline-block;background:#fff0e7;color:#c2410c;font-size:10px;font-weight:900;padding:6px 9px;border-radius:20px}.card h3{font-size:18px;margin:9px 0 5px}.meta{color:#777;font-size:13px;line-height:1.7}.value{margin-top:10px;display:flex;justify-content:space-between;align-items:center}.value b{font-size:19px}.value small{color:#888}.card button{width:100%;border:1px solid #ddd;background:#fff;border-radius:11px;padding:10px;margin-top:8px;font-weight:800}.card button:hover{background:#111;color:#fff}.empty{grid-column:1/-1;background:#fff;border:1px dashed #ccc;border-radius:18px;padding:35px;text-align:center;color:#777;line-height:1.6}
+.ai{margin:0 18px 30px;background:#fff;border:1px solid #ddd;border-radius:24px;padding:21px}.aihead{display:flex;justify-content:space-between}.kicker{font-size:10px;letter-spacing:1.5px;color:var(--orange);font-weight:950}.ai h2{font-size:24px;margin:4px 0}.ai p{font-size:13px;color:#777}.vmark{width:42px;height:42px;background:#111;color:#fff;border-radius:14px;display:grid;place-items:center;font-weight:950}.chat{max-height:260px;overflow:auto;margin:16px 0}.msg{background:#f4f4f1;border-radius:14px;padding:12px 14px;margin-top:8px;font-size:14px;line-height:1.5}.msg.user{background:#111;color:#fff}.aiinput{display:flex;gap:8px}.aiinput input{flex:1;border:1px solid #ddd;border-radius:13px;padding:13px;outline:0}.aiinput button{border:0;background:var(--orange);color:#fff;border-radius:13px;padding:0 18px;font-weight:900}
+.page{position:fixed;inset:0;background:var(--bg);z-index:40;display:none;overflow:auto}.page.show{display:block}.pagebar{height:70px;display:flex;align-items:center;gap:12px;padding:10px 18px;position:sticky;top:0;background:#f7f7f5ee;backdrop-filter:blur(12px);z-index:2}.back{width:42px;height:42px;border:1px solid #ddd;border-radius:13px;background:#fff;font-size:22px}.pagebar strong{font-size:18px}.detail{max-width:900px;margin:auto;padding:10px 18px 50px}.detailhero{width:100%;height:min(52vw,390px);object-fit:cover;border-radius:24px}.detail h1{font-size:clamp(30px,6vw,48px);letter-spacing:-2px;margin-top:20px}.detaillead{color:#666;line-height:1.55;margin-top:8px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.stat{background:#fff;border:1px solid #e2e2df;border-radius:15px;padding:13px}.stat small{display:block;color:#888;font-size:9px;font-weight:800}.stat b{display:block;margin-top:4px}.specs{background:#fff;border:1px solid #ddd;border-radius:20px;padding:18px}.specs h2{font-size:21px;margin-bottom:10px}.spec{display:flex;justify-content:space-between;gap:20px;border-top:1px solid #eee;padding:12px 0;font-size:14px}.spec span{color:#777}.detailactions{display:flex;gap:9px;margin-top:15px}.detailactions button{flex:1;border:0;border-radius:13px;padding:13px;background:#111;color:#fff;font-weight:900}.detailactions button:first-child{background:var(--orange)}
+.toast{position:fixed;z-index:100;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;background:#111;color:#fff;padding:12px 16px;border-radius:13px;font-size:13px;transition:.2s;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+footer{text-align:center;color:#999;font-size:11px;padding:0 18px 30px}
+@media(max-width:700px){.categories{grid-template-columns:1fr}.form{grid-template-columns:1fr 1fr}.find{grid-column:1/-1}.cards{grid-template-columns:1fr}.search{flex-direction:column}.primary{min-height:50px}.detailhero{height:260px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">val<span>o</span>ra</div><button class="location" id="loc" onclick="requestLocation()" title="Use my location" aria-label="Use my location"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></button></header>
+<section class="hero"><h1>Find what's<br><span>worth it.</span></h1><p>Tell Valora what you want, your location and your budget. Valora understands normal searches, typos and everyday language.</p><div class="search"><input id="q" placeholder="Try “cheap PS5 in Nairobi under 60000”"><button class="primary" onclick="smartSearch()">Search</button></div></section>
+<section class="categories">
+<button class="cat active" onclick="setCat('shopping',this)"><div class="icon"><svg viewBox="0 0 24 24"><path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div><strong>Shopping</strong><small>Real products and useful comparisons.</small></button>
+<button class="cat" onclick="setCat('hotels',this)"><div class="icon"><svg viewBox="0 0 24 24"><path d="M4 20V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v15"/><path d="M4 12h16M7 9h3M14 9h3M7 16h3M14 16h3"/></svg></div><strong>Hotels</strong><small>Find stays around your location.</small></button>
+<button class="cat" onclick="setCat('food',this)"><div class="icon"><svg viewBox="0 0 24 24"><path d="M5 11h14a7 7 0 0 1-14 0Z"/><path d="M4 11h16M8 5v3M12 4v4M16 5v3"/></svg></div><strong>Food</strong><small>Discover nearby places to eat.</small></button>
+</section>
+<section class="panel"><h2>Fine-tune your search</h2><div class="form"><div class="field"><label>LOCATION</label><input id="place" placeholder="City or area"></div><div class="field"><label>MAX BUDGET (KSh)</label><input id="budget" type="number" placeholder="50000"></div><div class="field"><label>PRIORITY</label><select id="priority"><option value="value">Best value</option><option value="cheap">Cheapest</option><option value="rating">Highest rated</option><option value="near">Closest</option></select></div><button class="find" onclick="runSearch()">Find best</button></div></section>
+<section class="results"><div class="result-head"><div><h2 id="heading">Shopping picks</h2><small id="sub">Real products are shown below.</small></div></div><div class="cards" id="cards"></div></section>
+<section class="ai"><div class="aihead"><div><div class="kicker">VALORA AI</div><h2>Ask about a result</h2><p>Ask for specs, pros, cons, comparisons or a recommendation.</p></div><div class="vmark">V</div></div><div class="chat" id="chat"><div class="msg">Pick a product and ask me something like “What are its specs?”</div></div><div class="aiinput"><input id="ask" placeholder="Ask Valora..." autocomplete="off"><button onclick="askAI()">Ask</button></div></section>
+<footer>Valora uses public place data for nearby hotels and food. Product prices vary by retailer.</footer>
+</div>
+
+<div class="page" id="page"><div class="pagebar"><button class="back" onclick="closePage()">‹</button><strong id="pageTitle">Details</strong></div><div class="detail" id="detail"></div></div>
+<div class="toast" id="toast"></div>
+
+
+<script>
+let category='shopping',coords=null,current=[];
+const typo={cheep:'cheap',cheepest:'cheapest',budjet:'budget',hotle:'hotel',htel:'hotel',hottel:'hotel',restuarant:'restaurant',restraunt:'restaurant',resturant:'restaurant',piza:'pizza',pizzza:'pizza',burgar:'burger',playstaiton:'playstation',playstaion:'playstation',nairoby:'nairobi',hedphones:'headphones',headfone:'headphones',wirless:'wireless'};
+function words(s){return s.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(Boolean).map(x=>typo[x]||x)}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function toast(s){let x=document.getElementById('toast');x.textContent=s;x.classList.add('show');clearTimeout(window.toast);window.toast=setTimeout(()=>x.classList.remove('show'),2500)}
+function setCat(c,el){category=c;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));el.classList.add('active');runSearch()}
+function detect(w){if(w.some(x=>['hotel','hotels','hostel','stay','room'].includes(x)))return'hotels';if(w.some(x=>['food','restaurant','pizza','burger','chicken','cafe','coffee','eat'].includes(x)))return'food';return'shopping')}
+function smartSearch(){
+ let q=document.getElementById('q').value.trim();if(!q){toast('Tell Valora what you want');return}
+ let w=words(q);category=detect(w);
+ document.querySelectorAll('.cat').forEach((x,i)=>x.classList.toggle('active',(category==='shopping'&&i===0)||(category==='hotels'&&i===1)||(category==='food'&&i===2)));
+ let nums=w.filter(x=>/^\d+$/.test(x));if(nums.length)document.getElementById('budget').value=nums[nums.length-1];
+ if(w.includes('cheap')||w.includes('cheapest')||w.includes('affordable'))document.getElementById('priority').value='cheap';
+ else if(w.includes('rated')||w.includes('rating')||w.includes('best'))document.getElementById('priority').value='rating';
+ else if(w.includes('near')||w.includes('nearby')||w.includes('closest'))document.getElementById('priority').value='near';
+ let i=w.indexOf('in');if(i>=0&&w[i+1])document.getElementById('place').value=w.slice(i+1).filter(x=>!['under','below'].includes(x)&&!/^\d+$/.test(x)).join(' ');
+ runSearch()
+}
+async function runSearch(){
+ const q=document.getElementById('q').value.trim();
+ const place=document.getElementById('place').value.trim();
+ const budget=document.getElementById('budget').value;
+ const priority=document.getElementById('priority').value;
+ document.getElementById('cards').innerHTML='<div class="empty">Valora is searching live data…</div>';
+ try{
+   const params=new URLSearchParams({q,category,place,budget,priority});
+   if(coords){params.set('lat',coords.lat);params.set('lon',coords.lon)}
+   const r=await fetch('/api/search?'+params);
+   if(!r.ok) throw Error('search');
+   const data=await r.json();
+   current=data.results||[];
+   renderResults(data);
+ }catch(e){
+   document.getElementById('cards').innerHTML='<div class="empty">Valora could not reach its backend.<br><br>If you opened this as a downloaded HTML file, start the Valora server and open the address it gives you.</div>';
+ }
+}
+function renderResults(data){
+ document.getElementById('heading').textContent=data.title||'Results';
+ document.getElementById('sub').textContent=data.subtitle||`${current.length} results`;
+ const cards=document.getElementById('cards');cards.innerHTML='';
+ if(!current.length){cards.innerHTML='<div class="empty">No strong matches yet. Try a broader search or a different location.</div>';return}
+ current.forEach((p,i)=>{
+  let d=document.createElement('article');d.className='card';
+  d.innerHTML=`<div class="pic"><img src="${esc(p.image||'')}" alt="${esc(p.name)}" onerror="this.style.display='none'"></div>
+  <div class="body"><span class="badge">${i===0?'BEST MATCH':'VALORA PICK'}</span><h3>${esc(p.name)}</h3>
+  <div class="meta">${p.rating?'⭐ '+esc(p.rating):''}${p.distance?'<br>📍 '+esc(p.distance):''}${p.price?'<br>💰 '+esc(p.price):''}</div>
+  <div class="value"><b>${esc(p.score||'—')}</b><small>Valora score</small></div>
+  <button onclick="openResult(${i})">Open page</button>
+  <button onclick="askResult(${i})">Ask Valora AI</button></div>`;
+  cards.appendChild(d)
+ })
+}
+function openResult(i){
+ const p=current[i];
+ document.getElementById('pageTitle').textContent=p.name;
+ document.getElementById('detail').innerHTML=`<img class="detailhero" src="${esc(p.image||'')}" alt="" onerror="this.style.display='none'">
+ <h1>${esc(p.name)}</h1><p class="detaillead">${esc(p.description||p.why||'Valora found this result for your search.')}</p>
+ <div class="stats">
+ <div class="stat"><small>VALORA SCORE</small><b>${esc(p.score||'—')}</b></div>
+ <div class="stat"><small>RATING</small><b>${esc(p.rating||'Not listed')}</b></div>
+ <div class="stat"><small>PRICE</small><b>${esc(p.price||'Not listed')}</b></div></div>
+ <div class="specs"><h2>${p.specs?'Specifications':'About this place'}</h2>
+ ${(p.specs||[['Location',p.address||p.distance||'Nearby'],['Source',p.source||'Live public data']]).map(s=>`<div class="spec"><span>${esc(s[0])}</span><b>${esc(s[1])}</b></div>`).join('')}</div>
+ <div class="detailactions"><button onclick="askResult(${i})">Ask Valora AI</button>
+ ${p.lat?`<button onclick="window.open('https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=17/${p.lat}/${p.lon}','_blank')">Open map</button>`:`<button onclick="closePage()">Back to results</button>`}</div>`;
+ document.getElementById('page').classList.add('show')
+}
+function closePage(){document.getElementById('page').classList.remove('show')}
+function askResult(i){let p=current[i];document.getElementById('ask').value=`What are the specs, pros, cons and important things to know about ${p.name}?`;document.querySelector('.ai').scrollIntoView({behavior:'smooth'});askAI()}
+async function askAI(){
+ let q=document.getElementById('ask').value.trim();if(!q)return;
+ let c=document.getElementById('chat'),u=document.createElement('div');u.className='msg user';u.textContent=q;c.appendChild(u);
+ let b=document.createElement('div');b.className='msg';b.textContent='Valora is thinking…';c.appendChild(b);c.scrollTop=c.scrollHeight;
+ try{
+   const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,context:current.slice(0,8)})});
+   const data=await r.json();b.textContent=data.answer||'I could not answer that yet.'
+ }catch(e){b.textContent='The AI backend is not reachable. Start the Valora server and try again.'}
+ document.getElementById('ask').value='';c.scrollTop=c.scrollHeight
+}
+async function requestLocation(){
+ if(!navigator.geolocation){toast('GPS is not supported by this browser');return}
+ let b=document.getElementById('loc');b.disabled=true;
+ navigator.geolocation.getCurrentPosition(pos=>{
+   coords={lat:pos.coords.latitude,lon:pos.coords.longitude};
+   document.getElementById('place').value='Your location';
+   b.disabled=false;b.classList.add('ok');
+   b.innerHTML='<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>';
+   toast('Location enabled');
+   if(category!=='shopping')runSearch();
+ },err=>{
+   b.disabled=false;
+   toast(err.code===1?'Location permission was denied. Check Chrome site permissions.':'Could not get your location.')
+ },{enableHighAccuracy:true,timeout:15000,maximumAge:0})
+}
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')smartSearch()});
+document.getElementById('ask').addEventListener('keydown',e=>{if(e.key==='Enter')askAI()});
+document.getElementById('budget').addEventListener('keydown',e=>{if(e.key==='Enter')runSearch()});
+runSearch();
+</script>
+
+</body>
+</html>
